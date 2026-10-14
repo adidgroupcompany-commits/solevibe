@@ -17,7 +17,7 @@ Segera hadir: perawatan sepatu kulit asli, kulit paten, dan waterproof.
 
 | File | Fungsi |
 | --- | --- |
-| `index.html` | Halaman link SoleVibe (link di bio) |
+| `index.html` | Halaman link SoleVibe (link di bio), online di https://solevibe.github.io |
 | `assets/` | Logo dan foto profil |
 
 Hak cipta logo, foto, dan teks © 2026 SoleVibe. Seluruh hak dilindungi.
