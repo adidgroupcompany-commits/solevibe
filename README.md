@@ -4,7 +4,7 @@
 
 Setiap pasang sepatu membawa cerita. SoleVibe hadir untuk menjaganya: dirawat dengan teliti, dari pemeriksaan bahan hingga sentuhan akhir, dengan metode yang tepat untuk setiap bahan. Kami menjemputnya di rumah Anda, lalu mengantarkannya kembali dalam keadaan bersih, segar, dan siap menemani langkah Anda lagi.
 
-- Harga: Rp50.000 per pasang, sudah termasuk Cleaning, Deep Cleaning, Shoe Care, Special Treatment, dan Whitening
+- Harga: Rp50.000 per pasang, sudah termasuk Basic Cleaning, Deep Cleaning, Shoe Care, Special Treatment, dan Whitening
 - Selesai 2 hari, sudah termasuk pengantaran
 - Gratis antar-jemput radius 5 km dari Kemayoran; di luar radius +Rp15.000
 - Bayar di tempat (COD)
