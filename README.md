@@ -11,8 +11,6 @@ Setiap pasang sepatu membawa cerita. SoleVibe hadir untuk menjaganya: dirawat de
 - Order hanya via WhatsApp: 0823-2082-6237
 - Instagram: [@solevibe_jkt](https://www.instagram.com/solevibe_jkt/) · TikTok: [@solevibe.jkt](https://www.tiktok.com/@solevibe.jkt)
 
-Segera hadir: perawatan sepatu kulit asli, kulit paten, dan waterproof.
-
 ## Isi repository
 
 | File | Fungsi |
