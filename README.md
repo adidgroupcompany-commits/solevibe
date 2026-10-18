@@ -17,8 +17,9 @@ Setiap pasang sepatu membawa cerita. SoleVibe hadir untuk menjaganya: dirawat de
 | File | Fungsi |
 | --- | --- |
 | `index.html` | Landing page 3D SoleVibe, online di https://solevibe.github.io |
-| `assets/app3d.js` | Adegan 3D (Three.js): sepatu yang dibersihkan saat di-scroll + gelembung sabun |
-| `assets/model/` | Model 3D sepatu: *Materials Variants Shoe* oleh Shopify, CC BY 4.0 (tekstur dikecilkan, satu varian warna) |
+| `assets/app3d.js` | Cerita 3D (Three.js): perjalanan sepatu dijemput → diperiksa → dicuci → whitening → QC → diantar, mengikuti scroll |
+| `assets/peta-area.webp` | Peta area layanan radius 5 km dari Kemayoran |
+| `assets/model/` | Model 3D sepatu: *Materials Variants Shoe* oleh Shopify, CC BY 4.0 (tekstur dikecilkan, warna diubah jadi putih polos) |
 | `assets/vendor/` | Three.js r160 dan add-on-nya (MIT) |
 | `assets/sepatu/` | Foto 7 bahan sepatu yang dilayani |
 | `assets/` (lainnya) | Logo dan foto profil |

@@ -8,339 +8,366 @@
 <meta property="og:title" content="SoleVibe · Restore Your Sole. Refresh Your Vibe.">
 <meta property="og:description" content="Cuci sepatu online Jakarta: Rp50.000/pasang, 5 perawatan, antar-jemput, bayar COD.">
 <meta property="og:image" content="https://solevibe.github.io/assets/foto-profil-solevibe.png">
-<meta name="theme-color" content="#0b1430">
+<meta name="theme-color" content="#0a1230">
 <link rel="icon" href="assets/logo-bulat.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="preload" href="assets/model/sepatu.glb" as="fetch" crossorigin>
 <style>
+/* Palette: one analogous navy → indigo gradient; text stays white/blue-grey; cyan is the only accent; pink only on the promo. */
 :root{
-  --navy:#0b1430; --navy2:#121f48; --purple:#2e1a64; --magenta:#5c1860;
-  --ink:#f3f6ff; --muted:#aeb9d9; --line:rgba(255,255,255,.14); --glass:rgba(16,26,62,.55);
-  --cyan:#22d3ee; --pink:#ff4fa0; --wa:#25d366;
+  --bg0:#0a1230; --bg1:#111c48; --bg2:#1a2766; --bg3:#26307a;
+  --ink:#f4f7ff; --muted:#b9c4e4; --line:rgba(185,196,228,.18); --glass:rgba(12,20,56,.62);
+  --cyan:#3dd9f0; --cyan-ink:#062a33; --pink:#ff5ea8; --wa:#25d366;
   --display:"Sora",ui-sans-serif,system-ui,sans-serif; --body:"Figtree",ui-sans-serif,system-ui,sans-serif;
   color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--navy);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg0);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
 a{color:inherit}
 h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.02em;line-height:1.12;text-wrap:balance}
 p{margin:0}
 
-/* background gradient (same recipe as the catalog) + 3D canvas */
-.bg{position:fixed;inset:0;z-index:-2;background:
-  radial-gradient(60% 50% at 8% 8%,rgba(34,211,238,.28),transparent 70%),
-  radial-gradient(70% 60% at 92% 95%,rgba(255,79,160,.45),transparent 70%),
-  radial-gradient(60% 60% at 50% 55%,rgba(110,60,200,.30),transparent 70%),
-  linear-gradient(180deg,#0b1430 0%,#1c1550 55%,#3a1157 100%)}
-#scene{position:fixed;inset:0;z-index:-1;width:100vw;height:100vh;display:block;pointer-events:none}
-.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.07;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-
-.wrap{width:min(1120px,100%);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+.bg{position:fixed;inset:0;z-index:-3;background:
+  radial-gradient(55% 45% at 12% 10%,rgba(61,217,240,.16),transparent 70%),
+  radial-gradient(60% 55% at 88% 85%,rgba(120,110,255,.22),transparent 70%),
+  linear-gradient(170deg,var(--bg0) 0%,var(--bg1) 40%,var(--bg2) 75%,var(--bg3) 100%)}
+#scene{position:fixed;inset:0;z-index:-2;width:100vw;height:100vh;display:block;pointer-events:none}
+.wrap{width:min(1120px,100%);margin:0 auto;padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;font-weight:700;text-decoration:none;font-family:var(--body);transition:transform .2s,box-shadow .2s;border:0;cursor:pointer;font-size:16px}
+.btn:hover{transform:translateY(-2px)}
+.btn:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.btn-wa{background:var(--wa);color:#05301a;padding:13px 22px;box-shadow:0 10px 30px -10px rgba(37,211,102,.7)}
+.btn-ghost{border:1px solid var(--line);background:rgba(255,255,255,.06);padding:12px 20px;color:var(--ink)}
+.btn svg{width:20px;height:20px}
 
 /* nav */
-nav{position:fixed;top:0;left:0;right:0;z-index:20;transition:background .3s,backdrop-filter .3s}
-nav.solid{background:rgba(11,20,48,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:68px}
+nav{position:fixed;top:0;left:0;right:0;z-index:30;transition:background .3s}
+nav.solid{background:rgba(10,18,48,.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:66px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700;font-size:20px}
-.brand img{width:40px;height:40px;border-radius:50%;box-shadow:0 0 0 2px var(--cyan)}
-.navlinks{display:flex;gap:22px;font-weight:500;font-size:15px}
-.navlinks a{text-decoration:none;color:var(--muted)}
-.navlinks a:hover{color:var(--ink)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;font-weight:700;text-decoration:none;font-family:var(--body);transition:transform .2s,box-shadow .2s}
-.btn:hover{transform:translateY(-2px)}
-.btn-wa{background:var(--wa);color:#05301a;padding:12px 22px;box-shadow:0 10px 30px -8px rgba(37,211,102,.6)}
-.btn-ghost{border:1px solid var(--line);background:rgba(255,255,255,.06);padding:12px 22px;color:var(--ink)}
-.btn svg{width:20px;height:20px}
+.brand img{width:38px;height:38px;border-radius:50%;box-shadow:0 0 0 2px var(--cyan)}
+.navlinks{display:flex;gap:20px;font-weight:500;font-size:15px}
+.navlinks a{text-decoration:none;color:var(--muted)} .navlinks a:hover{color:var(--ink)}
 .nav-cta{padding:9px 16px;font-size:14px}
 
-/* hero */
-.hero{min-height:100svh;display:grid;align-items:end;padding:110px 0 70px}
-.hero .wrap{display:grid;gap:22px}
-.eyebrow{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
-.hero h1{font-size:clamp(40px,8vw,88px);line-height:1.02;font-weight:800;max-width:14ch}
-.hero h1 span{background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p.lead{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-width:46ch}
-.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+/* 3D story: a tall section; the text panels sit in a sticky stage */
+.story{position:relative;height:calc(var(--steps) * 100svh)}
+.stage{position:sticky;top:0;height:100svh;overflow:hidden}
+.panel{position:absolute;left:max(18px,calc((100vw - 1120px)/2 + 18px));top:50%;transform:translateY(-50%);width:min(470px,42vw);display:grid;gap:16px;opacity:0;visibility:hidden;transition:opacity .45s ease,transform .45s ease,visibility .45s}
+.panel.on{opacity:1;visibility:visible;transform:translateY(-50%)}
+.panel .num{font-family:var(--display);font-weight:800;font-size:15px;color:var(--cyan);letter-spacing:.1em}
+.panel h1{font-size:clamp(40px,5.6vw,72px);font-weight:800}
+.panel h1 span{color:var(--cyan)}
+.panel h2{font-size:clamp(30px,3.8vw,46px);font-weight:800}
+.panel p{color:var(--muted);font-size:18px}
+.panel .card{padding:22px 24px;display:grid;gap:12px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:999px;padding:6px 14px;font-size:14px;color:var(--ink)}
-.scroll-hint{color:var(--muted);font-size:13px;display:flex;align-items:center;gap:8px}
-.scroll-hint i{width:22px;height:34px;border:2px solid var(--muted);border-radius:12px;position:relative}
-.scroll-hint i::after{content:"";position:absolute;left:50%;top:6px;width:4px;height:7px;margin-left:-2px;border-radius:2px;background:var(--cyan);animation:wheel 1.6s infinite}
+.chip{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:999px;padding:6px 13px;font-size:14px}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px}
+.progress{position:absolute;right:max(18px,calc((100vw - 1120px)/2 + 18px));top:50%;transform:translateY(-50%);display:grid;gap:10px}
+.progress button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:rgba(185,196,228,.35);cursor:pointer;transition:all .3s}
+.progress button.on{background:var(--cyan);height:28px;border-radius:6px}
+.hint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);color:var(--muted);font-size:13px;display:flex;align-items:center;gap:8px;transition:opacity .4s}
+.hint i{width:22px;height:34px;border:2px solid var(--muted);border-radius:12px;position:relative}
+.hint i::after{content:"";position:absolute;left:50%;top:6px;width:4px;height:7px;margin-left:-2px;border-radius:2px;background:var(--cyan);animation:wheel 1.6s infinite}
 @keyframes wheel{0%{opacity:0;transform:translateY(0)}40%{opacity:1}100%{opacity:0;transform:translateY(10px)}}
+.drag{position:absolute;right:max(60px,calc((100vw - 1120px)/2 + 60px));bottom:30px;color:var(--muted);font-size:13px;transition:opacity .4s}
+.hotspot{position:absolute;left:0;top:0;pointer-events:none;opacity:0;transition:opacity .4s;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.hotspot::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 6px rgba(61,217,240,.25)}
+.hotspot span{background:rgba(10,18,48,.85);border:1px solid var(--line);padding:5px 10px;border-radius:999px}
+.hotspot.on{opacity:1}
+.hotspot.flip{flex-direction:row-reverse}
 
-/* sections */
-section{padding:90px 0}
-#bahan{overflow:hidden}
-.sec-head{display:grid;gap:12px;margin-bottom:38px;max-width:640px}
-.sec-head h2{font-size:clamp(30px,5vw,48px);font-weight:800}
+/* content sections */
+section.block{padding:96px 0;position:relative}
+.sec-head{display:grid;gap:12px;margin-bottom:36px;max-width:680px}
+.sec-head h2{font-size:clamp(30px,4.6vw,46px);font-weight:800}
 .sec-head p{color:var(--muted);font-size:17px}
-.glass{background:var(--glass);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.grid{display:grid;gap:14px}
+.g5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{padding:22px;display:grid;gap:10px;align-content:start}
+.card h3{font-size:19px}
+.card p,.card li{color:var(--muted);font-size:15.5px}
+.card ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.n{font-family:var(--display);font-weight:800;font-size:38px;line-height:1;color:var(--cyan)}
 
-/* tilt cards */
-.tilt{transform-style:preserve-3d;transition:transform .25s ease-out;will-change:transform}
-.tilt .lift{transform:translateZ(36px)}
+.mat{padding:0;overflow:hidden}
+.mat .ph{background:radial-gradient(70% 70% at 50% 60%,rgba(61,217,240,.16),transparent 70%);padding:18px 18px 0}
+.mat img{height:150px;width:100%;object-fit:contain;filter:drop-shadow(0 16px 16px rgba(0,0,0,.45))}
+.mat .body{padding:18px 20px 22px;display:grid;gap:10px}
+.mat dt{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
+.mat dd{margin:0 0 6px;color:var(--muted);font-size:15px}
+.mat dl{margin:0}
 
-/* layanan */
-.services{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;perspective:1000px}
-.svc{padding:22px 18px;min-height:230px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
-.svc .num{font-family:var(--display);font-weight:800;font-size:44px;line-height:1;background:linear-gradient(160deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
-.svc h3{font-size:19px}
-.svc p{color:var(--muted);font-size:15px}
-.svc:nth-child(even){border-color:rgba(255,79,160,.35)}
-.svc:nth-child(odd){border-color:rgba(34,211,238,.35)}
-
-/* bahan carousel */
-.materials{position:relative;height:430px;perspective:1300px;margin-top:10px}
-.ring{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
-.mat{position:absolute;left:50%;top:10px;width:300px;margin-left:-150px;padding:18px;display:grid;gap:10px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.mat img{height:150px;width:100%;object-fit:contain;filter:drop-shadow(0 18px 18px rgba(0,0,0,.45))}
-.mat h3{font-size:20px}
-.mat p{color:var(--muted);font-size:14.5px}
-.mat .tag{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
-.mat-controls{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:6px}
-.round{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--ink);font-size:20px;cursor:pointer}
-.round:focus-visible,.btn:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.dots{display:flex;gap:8px}
-.dots button{width:9px;height:9px;border-radius:50%;border:0;background:rgba(255,255,255,.3);padding:0;cursor:pointer}
-.dots button[aria-current="true"]{background:var(--pink);width:24px;border-radius:6px}
-
-/* harga */
-.pricing{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;perspective:1100px}
-.price{padding:30px;display:grid;gap:16px;align-content:start}
-.price .label{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
-.price .amount{font-family:var(--display);font-weight:800;font-size:clamp(46px,7vw,72px);line-height:1}
-.price .amount small{display:block;font-size:18px;font-weight:600;color:var(--muted);margin-top:10px;letter-spacing:0}
-.promo .amount small{color:rgba(255,255,255,.85)}
+.price{padding:30px;display:grid;gap:14px;align-content:start;position:relative}
+.price .amount{font-family:var(--display);font-weight:800;font-size:clamp(44px,6vw,64px);line-height:1}
+.price .unit{color:var(--muted);font-weight:600}
 .price ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
-.price li{display:flex;gap:10px;align-items:flex-start}
-.price li::before{content:"";flex:none;width:20px;height:20px;margin-top:2px;border-radius:50%;background:var(--cyan) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b1430' stroke-width='3.5'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/12px no-repeat}
-.promo{background:linear-gradient(150deg,rgba(255,79,160,.9),rgba(140,40,160,.85));border-color:rgba(255,255,255,.25)}
-.promo .label{color:#fff}
-.promo li::before{background-color:#fff}
-.promo .strike{text-decoration:line-through;opacity:.75;font-weight:600}
-.sticker{position:absolute;top:-16px;right:18px;background:var(--cyan);color:var(--navy);font-family:var(--display);font-weight:800;border-radius:999px;padding:8px 16px;transform:rotate(6deg);box-shadow:0 10px 24px -8px rgba(0,0,0,.5)}
+.price li{display:flex;gap:10px;align-items:flex-start;color:var(--ink)}
+.price li::before{content:"✓";flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--cyan);color:var(--cyan-ink);margin-top:1px}
+.promo{background:linear-gradient(150deg,#e2468f,#8a3ab9);border-color:rgba(255,255,255,.25)}
+.promo .unit,.promo .strike{color:rgba(255,255,255,.85)}
+.promo li::before{background:#fff;color:#8a3ab9}
+.strike{text-decoration:line-through}
+.sticker{position:absolute;top:-14px;right:18px;background:var(--cyan);color:var(--cyan-ink);font-family:var(--display);font-weight:800;border-radius:999px;padding:7px 15px;transform:rotate(5deg)}
 
-/* poin */
-.points{display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;padding:34px}
-.coin{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:40px;color:var(--navy);
-  background:radial-gradient(circle at 35% 30%,#fff 0 8%,#7ff0ff 22%,var(--cyan) 55%,#0d8fa8 100%);box-shadow:0 0 0 8px rgba(34,211,238,.18),0 20px 40px -10px rgba(34,211,238,.6);animation:spin 6s linear infinite}
-@keyframes spin{0%,100%{transform:rotateY(-30deg)}50%{transform:rotateY(30deg)}}
-.points-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.pt{padding:16px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid var(--line)}
-.pt b{display:block;font-family:var(--display);font-size:22px;color:var(--cyan)}
-.pt span{color:var(--muted);font-size:14.5px}
+.map{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;align-items:start}
+.map figure{margin:0;padding:12px;background:#fff;border-radius:20px}
+.map figure img{border-radius:12px}
+.map figcaption{color:#475569;font-size:12.5px;padding:8px 6px 2px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--cyan);font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+td{color:var(--muted)} td:first-child{color:var(--ink);font-weight:600}
 
-/* order steps */
-.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:s;perspective:1000px}
-.step{padding:22px;display:grid;gap:8px;align-content:start}
-.step .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(140deg,var(--cyan),var(--pink));font-size:24px}
-.step h3{font-size:18px}
-.step p{color:var(--muted);font-size:15px}
-.info-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-.info{padding:22px;display:grid;gap:8px}
-.info h3{font-size:18px}
-.info p,.info li{color:var(--muted);font-size:15px}
-.info ul{margin:0;padding-left:18px}
+details{border-bottom:1px solid var(--line)}
+details:last-child{border-bottom:0}
+summary{cursor:pointer;list-style:none;padding:18px 22px;font-weight:700;font-size:17px;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--cyan);font-size:22px;line-height:1;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details .ans{padding:0 22px 20px;color:var(--muted);display:grid;gap:8px}
+details .ans ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.acc{padding:4px 0}
 
-/* CTA + footer */
-.final{text-align:center;padding:60px 26px;display:grid;gap:18px;justify-items:center}
-.final h2{font-size:clamp(30px,5vw,52px);font-weight:800;max-width:18ch}
-.socials{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.final{text-align:center;padding:56px 24px;display:grid;gap:18px;justify-items:center}
+.final h2{font-size:clamp(30px,5vw,50px);font-weight:800;max-width:18ch}
 footer{padding:30px 0 50px;color:var(--muted);font-size:14px}
-footer .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;border-top:1px solid var(--line);padding-top:24px}
+footer .wrap{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:24px}
 
-/* reveal */
-.reveal{opacity:0;transform:translateY(40px) rotateX(8deg);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
 .reveal.in{opacity:1;transform:none}
 
-@media (max-width:960px){
-  .services{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .services .svc:last-child{grid-column:1/-1}
-  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .pricing{grid-template-columns:1fr}
-}
-@media (max-width:640px){
+@media (max-width:1000px){.g5{grid-template-columns:repeat(2,minmax(0,1fr))}.g5 .card:last-child{grid-column:1/-1}.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(2,minmax(0,1fr))}.map{grid-template-columns:1fr}}
+@media (max-width:700px){
   .navlinks{display:none}
-  section{padding:64px 0}
-  .services{grid-template-columns:1fr}
-  .svc{min-height:0}
-  .steps,.info-row,.points-grid{grid-template-columns:1fr}
-  .points{grid-template-columns:1fr;justify-items:center;text-align:center;padding:26px}
-  .coin{width:120px;height:120px;font-size:32px}
-  .materials{height:420px}
-  .mat{width:260px;margin-left:-130px}
-  .hero{padding-top:44svh;padding-bottom:48px}
+  .panel{left:18px;right:18px;width:auto;top:auto;bottom:max(70px,9svh);transform:none}
+  .panel.on{transform:none}
+  .panel h1{font-size:36px}
+  .panel[data-step="0"] .chips{display:none}
+  .panel h2{font-size:28px}
+  .panel p{font-size:16px}
+  .panel .card{padding:16px 18px}
+  .progress{right:10px;top:38%}
+  .drag{display:none}
+  .hint{bottom:16px}
+  section.block{padding:70px 0}
+  .g5,.g4,.g3,.g2{grid-template-columns:1fr}
+  .g5 .card:last-child{grid-column:auto}
 }
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .reveal{opacity:1;transform:none;transition:none}
-  .coin,.scroll-hint i::after{animation:none}
-  .ring{transition:none}
-}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.hint i::after{animation:none}}
 </style>
 </head>
 <body>
 <div class="bg" aria-hidden="true"></div>
 <canvas id="scene" aria-hidden="true"></canvas>
-<div class="grain" aria-hidden="true"></div>
 
 <nav id="nav">
   <div class="wrap">
-    <a class="brand" href="#top"><img src="assets/logo-bulat.png" alt="" width="40" height="40">SoleVibe</a>
+    <a class="brand" href="#top"><img src="assets/logo-bulat.png" alt="" width="38" height="38">SoleVibe</a>
     <div class="navlinks">
-      <a href="#layanan">Layanan</a><a href="#bahan">Bahan</a><a href="#harga">Harga</a><a href="#order">Cara order</a>
+      <a href="#layanan">Layanan</a><a href="#bahan">Bahan</a><a href="#harga">Harga</a><a href="#area">Area</a><a href="#ketentuan">Ketentuan</a><a href="#faq">FAQ</a>
     </div>
     <a class="btn btn-wa nav-cta" href="https://wa.me/message/IOZESRI2RRL3I1" target="_blank" rel="noopener">Order</a>
   </div>
 </nav>
 
 <main id="top">
-  <header class="hero" data-k="hero">
-    <div class="wrap">
-      <div class="eyebrow">Cuci sepatu online · Jakarta</div>
-      <h1>Restore Your Sole. <span>Refresh Your Vibe.</span></h1>
-      <p class="lead">Sepatu kucel? Santai, biar kami yang urus. Tinggal chat, kami jemput, balik lagi udah kinclong.</p>
-      <div class="chips">
-        <span class="chip">Rp50.000/pasang</span><span class="chip">5 perawatan</span><span class="chip">Selesai 2 hari</span><span class="chip">Antar-jemput</span><span class="chip">Bayar COD</span>
+  <!-- 3D story: scroll moves the camera through the journey of one pair of shoes -->
+  <section class="story" id="cerita" style="--steps:7" aria-label="Perjalanan sepatumu di SoleVibe">
+    <div class="stage" id="stage">
+      <div class="panel on" data-step="0">
+        <div class="eyebrow">Cuci sepatu online · Jakarta</div>
+        <h1>Restore Your Sole. <span>Refresh Your Vibe.</span></h1>
+        <p>Sepatu kucel? Santai, biar kami yang urus. Tinggal chat, kami jemput, balik lagi udah kinclong.</p>
+        <div class="chips"><span class="chip">Rp50.000/pasang</span><span class="chip">5 perawatan</span><span class="chip">Selesai 2 hari</span><span class="chip">Antar-jemput</span><span class="chip">Bayar COD</span></div>
+        <div class="cta-row">
+          <a class="btn btn-wa" href="https://wa.me/message/IOZESRI2RRL3I1" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.48-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.8a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.72.98 1-3.63-.24-.37a9.8 9.8 0 0 1-1.5-5.22c0-5.42 4.41-9.83 9.84-9.83 2.63 0 5.1 1.03 6.95 2.88a9.77 9.77 0 0 1 2.88 6.96c0 5.42-4.42 9.82-9.84 9.82zm8.37-18.2A11.76 11.76 0 0 0 12.05 0C5.5 0 .17 5.33.16 11.88c0 2.1.55 4.14 1.59 5.94L.06 24l6.33-1.66a11.86 11.86 0 0 0 5.66 1.44c6.55 0 11.88-5.33 11.88-11.89 0-3.17-1.24-6.16-3.48-8.4z"/></svg>Order via WhatsApp</a>
+          <a class="btn btn-ghost" href="#harga">Harga &amp; promo</a>
+        </div>
       </div>
-      <div class="cta-row">
-        <a class="btn btn-wa" href="https://wa.me/message/IOZESRI2RRL3I1" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.48-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.72.98 1-3.63-.24-.37a9.8 9.8 0 0 1-1.5-5.22c0-5.42 4.41-9.83 9.84-9.83 2.63 0 5.1 1.03 6.95 2.88a9.77 9.77 0 0 1 2.88 6.96c0 5.42-4.42 9.82-9.84 9.82zm8.37-18.2A11.76 11.76 0 0 0 12.05 0C5.5 0 .17 5.33.16 11.88c0 2.1.55 4.14 1.59 5.94L.06 24l6.33-1.66a11.86 11.86 0 0 0 5.66 1.44h.01c6.55 0 11.88-5.33 11.88-11.89 0-3.17-1.24-6.16-3.48-8.4z"/></svg>
-          Order via WhatsApp
-        </a>
-        <a class="btn btn-ghost" href="#harga">Lihat harga &amp; promo</a>
-      </div>
-      <div class="scroll-hint"><i></i>Scroll untuk lihat lebih</div>
-    </div>
-  </header>
+      <div class="panel" data-step="1"><div class="card glass"><div class="num">01 · JEMPUT</div><h2>Kami jemput ke rumahmu.</h2><p>Chat WhatsApp, kirim alamat dan <em>sharelock</em>. Kurir SoleVibe menjemput sepatumu, gratis dalam radius 5 km dari Kemayoran.</p></div></div>
+      <div class="panel" data-step="2"><div class="card glass"><div class="num">02 · PERIKSA</div><h2>Diperiksa &amp; difoto dulu.</h2><p>Setiap pasang difoto dari 6 sudut dan dicek bahannya. Kalau ada kerusakan, kami kabari dulu sebelum dicuci.</p></div></div>
+      <div class="panel" data-step="3"><div class="card glass"><div class="num">03 · BASIC &amp; DEEP CLEANING</div><h2>Kotoran diangkat sampai bersih.</h2><p>Debu harian disikat, lalu noda berat dibersihkan dengan metode yang sesuai bahan sepatumu.</p></div></div>
+      <div class="panel" data-step="4"><div class="card glass"><div class="num">04 · SPECIAL TREATMENT &amp; WHITENING</div><h2>Putihnya balik lagi.</h2><p>Bahan sensitif dirawat khusus. Bagian putih yang kusam dan sol yang menguning dicerahkan kembali.</p></div></div>
+      <div class="panel" data-step="5"><div class="card glass"><div class="num">05 · SHOE CARE &amp; QC</div><h2>Wangi, rapi, lolos QC.</h2><p>Diberi conditioner dan deodorizer, bentuknya dirapikan, lalu dicek satu per satu sebelum dikemas.</p></div></div>
+      <div class="panel" data-step="6"><div class="card glass"><div class="num">06 · ANTAR &amp; BAYAR</div><h2>Diantar balik, bayar COD.</h2><p>Selesai 2 hari. Sepatu diantar ke rumahmu, bayar tunai atau transfer saat sampai.</p><div class="cta-row"><a class="btn btn-wa" href="https://wa.me/message/IOZESRI2RRL3I1" target="_blank" rel="noopener">Jadwalkan jemput</a></div></div></div>
 
-  <section id="layanan" data-k="layanan">
+      <div class="hotspot" data-hs="0"><span>Bahan: mesh / rajut</span></div>
+      <div class="hotspot" data-hs="1"><span>Noda lumpur di upper</span></div>
+      <div class="hotspot" data-hs="2"><span>Sol mulai menguning</span></div>
+
+      <div class="progress" id="progress" aria-label="Langkah"></div>
+      <div class="hint" id="hint"><i></i>Scroll untuk ikuti perjalanan sepatumu</div>
+      <div class="drag" id="drag">Geser untuk memutar sepatu ↔</div>
+    </div>
+  </section>
+
+  <section class="block" id="layanan">
     <div class="wrap">
-      <div class="sec-head reveal">
-        <div class="eyebrow">Satu harga, lima perawatan</div>
-        <h2>Paket Cuci Sepatu, sudah all-in.</h2>
-        <p>Setiap pasang otomatis dapat kelima perawatan ini. Gak ada biaya tambahan per layanan.</p>
-      </div>
-      <div class="services">
-        <article class="svc glass tilt reveal"><div class="lift"><div class="num">01</div></div><h3>Basic Cleaning</h3><p>Membersihkan debu &amp; kotoran harian di upper, sol, dan tali.</p></article>
-        <article class="svc glass tilt reveal"><div class="lift"><div class="num">02</div></div><h3>Deep Cleaning</h3><p>Pembersihan menyeluruh untuk noda dan kotoran berat.</p></article>
-        <article class="svc glass tilt reveal"><div class="lift"><div class="num">03</div></div><h3>Shoe Care</h3><p>Conditioner, deodorizer, dan merapikan bentuk sepatu.</p></article>
-        <article class="svc glass tilt reveal"><div class="lift"><div class="num">04</div></div><h3>Special Treatment</h3><p>Penanganan khusus sesuai bahan, seperti suede, nubuck, dan mesh.</p></article>
-        <article class="svc glass tilt reveal"><div class="lift"><div class="num">05</div></div><h3>Whitening</h3><p>Mencerahkan lagi bagian putih yang kusam: upper, midsole, dan tali.</p></article>
+      <div class="sec-head reveal"><div class="eyebrow">Satu harga, lima perawatan</div><h2>Paket Cuci Sepatu, sudah all-in.</h2><p>Setiap pasang otomatis dapat kelima perawatan ini, tanpa biaya tambahan per layanan.</p></div>
+      <div class="grid g5">
+        <article class="card glass reveal"><div class="n">01</div><h3>Basic Cleaning</h3><p>Membersihkan debu &amp; kotoran harian di upper, sol, dan tali.</p></article>
+        <article class="card glass reveal"><div class="n">02</div><h3>Deep Cleaning</h3><p>Pembersihan menyeluruh untuk noda dan kotoran berat.</p></article>
+        <article class="card glass reveal"><div class="n">03</div><h3>Shoe Care</h3><p>Conditioner, deodorizer di bagian dalam, dan merapikan bentuk sepatu.</p></article>
+        <article class="card glass reveal"><div class="n">04</div><h3>Special Treatment</h3><p>Penanganan khusus sesuai bahan, seperti suede, nubuck, dan mesh.</p></article>
+        <article class="card glass reveal"><div class="n">05</div><h3>Whitening</h3><p>Mencerahkan bagian putih yang kusam: upper, midsole, dan tali.</p></article>
       </div>
     </div>
   </section>
 
-  <section id="bahan" data-k="bahan">
+  <section class="block" id="bahan">
     <div class="wrap">
-      <div class="sec-head reveal">
-        <div class="eyebrow">7 bahan yang kami layani</div>
-        <h2>Beda bahan, beda cara rawat.</h2>
-        <p>Geser untuk lihat tiap bahan dan cara kami merawatnya. Panduan lengkap ada di artikel <a href="https://www.canva.com/d/ogjd3teBRaCoX-f" target="_blank" rel="noopener">Kenali Bahan Sepatumu</a>.</p>
-      </div>
-      <div class="materials reveal" id="materials" aria-roledescription="carousel" aria-label="Bahan sepatu">
-        <div class="ring" id="ring"></div>
-      </div>
-      <div class="mat-controls">
-        <button class="round" id="prev" aria-label="Bahan sebelumnya">‹</button>
-        <div class="dots" id="dots"></div>
-        <button class="round" id="next" aria-label="Bahan berikutnya">›</button>
-      </div>
+      <div class="sec-head reveal"><div class="eyebrow">Artikel · Kenali Bahan Sepatumu</div><h2>7 bahan yang kami layani, dan cara kami merawatnya.</h2><p>Beda bahan, beda perlakuan. Ini panduan singkat yang juga kami pakai di workshop.</p></div>
+      <div class="grid g4" id="matGrid"></div>
     </div>
   </section>
 
-  <section id="harga" data-k="harga">
+  <section class="block" id="harga">
     <div class="wrap">
-      <div class="sec-head reveal">
-        <div class="eyebrow">Harga</div>
-        <h2>Jelas dari awal, bayar pas sepatu balik.</h2>
-      </div>
-      <div class="pricing">
-        <article class="price glass tilt reveal">
-          <div class="label">Cuci Sepatu · Paket Lengkap</div>
-          <div class="amount lift">Rp50.000 <small>/ pasang</small></div>
-          <ul>
-            <li>5 perawatan: Basic Cleaning, Deep Cleaning, Shoe Care, Special Treatment, Whitening</li>
-            <li>Selesai 2 hari, sudah termasuk antar balik</li>
-            <li>Gratis antar-jemput radius 5 km dari Kemayoran, di luar itu +Rp15.000 per order</li>
-            <li>Bayar di tempat (COD) saat sepatu diantar</li>
-          </ul>
+      <div class="sec-head reveal"><div class="eyebrow">Harga, promo &amp; poin</div><h2>Jelas dari awal, bayar pas sepatu balik.</h2></div>
+      <div class="grid g2">
+        <article class="price glass reveal">
+          <div class="eyebrow">Cuci Sepatu · Paket Lengkap</div>
+          <div><div class="amount">Rp50.000</div><div class="unit">per pasang</div></div>
+          <ul><li>5 perawatan: Basic Cleaning, Deep Cleaning, Shoe Care, Special Treatment, Whitening</li><li>Selesai 2 hari, sudah termasuk antar balik</li><li>Gratis antar-jemput radius 5 km dari Kemayoran, di luar itu +Rp15.000 per order</li><li>Bayar di tempat (COD): tunai, transfer, atau QRIS</li></ul>
         </article>
-        <article class="price promo glass tilt reveal" style="position:relative">
-          <span class="sticker lift">HEMAT 50RB</span>
-          <div class="label">Promo customer baru</div>
-          <div class="amount lift">Rp100.000 <small>/ 3 pasang</small></div>
-          <p><span class="strike">Normal Rp150.000</span></p>
-          <ul>
-            <li>Berlaku 1x per customer, tanpa batas waktu</li>
-            <li>Boleh dipakai di order pertama atau berikutnya</li>
-            <li>Pasang ke-4 dan seterusnya Rp50.000/pasang</li>
-            <li>Bisa digabung dengan potongan Poin SoleVibe</li>
-          </ul>
+        <article class="price promo glass reveal">
+          <span class="sticker">HEMAT 50RB</span>
+          <div class="eyebrow" style="color:#fff">Promo customer baru</div>
+          <div><div class="amount">Rp100.000</div><div class="unit">untuk 3 pasang · <span class="strike">normal Rp150.000</span></div></div>
+          <ul><li>Berlaku 1x per customer, tanpa batas waktu</li><li>Boleh dipakai di order pertama atau berikutnya</li><li>Pasang ke-4 dan seterusnya Rp50.000/pasang</li><li>Bisa digabung dengan potongan Poin SoleVibe</li></ul>
         </article>
       </div>
+      <div class="grid g3" style="margin-top:14px">
+        <article class="card glass reveal"><div class="eyebrow">Poin SoleVibe</div><h3>Rp10.000 = 1 poin</h3><p>Tiap kelipatan Rp10.000 dari biaya cuci yang dibayar. Ongkir tidak dihitung.</p></article>
+        <article class="card glass reveal"><div class="eyebrow">Pakai poin</div><h3>1 poin = Rp1.000</h3><p>Potongan untuk order berikutnya, boleh dipakai sampai menutup seluruh tagihan.</p></article>
+        <article class="card glass reveal"><div class="eyebrow">Masa berlaku</div><h3>Reset tiap 1 Januari</h3><p>Poin berlaku sampai 31 Desember. Contoh: 2 pasang Rp100.000 = 10 poin.</p></article>
+      </div>
     </div>
   </section>
 
-  <section id="poin" data-k="poin">
+  <section class="block" id="order">
     <div class="wrap">
-      <div class="points glass reveal">
-        <div class="coin" aria-hidden="true">+1</div>
-        <div style="display:grid;gap:16px">
-          <div class="sec-head" style="margin:0">
-            <div class="eyebrow">Poin SoleVibe</div>
-            <h2>Makin sering cuci, makin hemat.</h2>
+      <div class="sec-head reveal"><div class="eyebrow">Cara order</div><h2>Empat langkah, kamu cukup rebahan.</h2></div>
+      <div class="grid g4">
+        <article class="card glass reveal"><div class="n">1</div><h3>Chat WhatsApp</h3><p>Kirim nama, nomor telepon, email (opsional), jumlah pasang, hari jemput, alamat lengkap + patokan, dan <em>sharelock</em>.</p></article>
+        <article class="card glass reveal"><div class="n">2</div><h3>Kami jemput</h3><p>Admin mengonfirmasi jadwal. Gak di rumah? Titip di teras, pos satpam, atau resepsionis kos.</p></article>
+        <article class="card glass reveal"><div class="n">3</div><h3>Dirawat 2 hari</h3><p>Diperiksa, difoto, lalu dicuci dengan metode yang pas untuk bahannya.</p></article>
+        <article class="card glass reveal"><div class="n">4</div><h3>Antar &amp; bayar</h3><p>Sepatu diantar balik dalam keadaan kinclong. Bayar COD saat sampai.</p></article>
+      </div>
+      <div class="grid g2" style="margin-top:14px">
+        <article class="card glass reveal"><h3>Jam aktif admin</h3><ul><li>Senin–Jumat: 18.00–22.00</li><li>Sabtu–Minggu: 10.00–22.00</li></ul><p>Di luar jam itu chat tetap masuk dan kami balas begitu jam aktif dimulai.</p></article>
+        <article class="card glass reveal"><h3>Kontak</h3><ul><li>WhatsApp: <a href="https://wa.me/message/IOZESRI2RRL3I1" target="_blank" rel="noopener">0823-2082-6237</a></li><li>Instagram: <a href="https://www.instagram.com/solevibe_jkt/" target="_blank" rel="noopener">@solevibe_jkt</a></li><li>TikTok: <a href="https://www.tiktok.com/@solevibe.jkt" target="_blank" rel="noopener">@solevibe.jkt</a></li></ul><p>Order hanya lewat WhatsApp. Tidak ada toko offline.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="area">
+    <div class="wrap">
+      <div class="sec-head reveal"><div class="eyebrow">Area &amp; ongkir</div><h2>Gratis antar-jemput dalam radius 5 km dari Kemayoran.</h2><p>Jarak dihitung garis lurus dari titik pusat Kemayoran. Yang menentukan tetap alamatmu, jadi kirim <em>sharelock</em> dan admin akan cek.</p></div>
+      <div class="map">
+        <figure class="reveal"><img src="assets/peta-area.webp" alt="Peta area layanan SoleVibe: radius 5 km dari titik pusat Kemayoran" width="1100" height="1026" loading="lazy"><figcaption>Biru: seluruh wilayah gratis. Merah muda: sebagian masuk radius, cek alamat. Abu-abu: di luar radius, +Rp15.000.</figcaption></figure>
+        <div class="grid">
+          <div class="card glass reveal">
+            <table>
+              <thead><tr><th>Kota</th><th>Gratis penuh</th><th>Sebagian (cek alamat)</th></tr></thead>
+              <tbody>
+                <tr><td>Jakarta Pusat</td><td>Sawah Besar, Kemayoran, Senen, Cempaka Putih, Johar Baru</td><td>Menteng, Gambir, Tanah Abang</td></tr>
+                <tr><td>Jakarta Utara</td><td>—</td><td>Tanjung Priok, Pademangan, Kelapa Gading</td></tr>
+                <tr><td>Jakarta Barat</td><td>—</td><td>Taman Sari</td></tr>
+                <tr><td>Jakarta Timur</td><td>—</td><td>Matraman, Pulogadung</td></tr>
+              </tbody>
+            </table>
           </div>
-          <div class="points-grid">
-            <div class="pt"><b>Rp10.000 = 1 poin</b><span>Tiap kelipatan Rp10.000 biaya cuci yang dibayar. Ongkir gak dihitung.</span></div>
-            <div class="pt"><b>1 poin = Rp1.000</b><span>Potongan buat order berikutnya, bisa sampai nutup semua tagihan.</span></div>
-            <div class="pt"><b>Reset 1 Januari</b><span>Poin berlaku sampai 31 Desember, jadi pakai sebelum tahun berganti.</span></div>
+          <div class="card glass reveal">
+            <table>
+              <thead><tr><th>Cara kirim</th><th>Biaya</th></tr></thead>
+              <tbody>
+                <tr><td>Kurir SoleVibe, ≤ 5 km</td><td>Gratis jemput &amp; antar</td></tr>
+                <tr><td>Kurir SoleVibe, &gt; 5 km</td><td>+Rp15.000 per order (jemput + antar)</td></tr>
+                <tr><td>Ojol (GoSend/GrabExpress)</td><td>Sesuai tarif aplikasi, pergi &amp; pulang, ditanggung customer</td></tr>
+                <tr><td>Ekspedisi (JNE, J&amp;T, dll.)</td><td>Sesuai tarif ekspedisi, pergi &amp; pulang, ditanggung customer</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="order" data-k="order">
+  <section class="block" id="ketentuan">
     <div class="wrap">
-      <div class="sec-head reveal">
-        <div class="eyebrow">Cara order</div>
-        <h2>Empat langkah, kamu cukup rebahan.</h2>
-      </div>
-      <div class="steps">
-        <article class="step glass tilt reveal"><div class="ico lift" aria-hidden="true">💬</div><h3>1. Chat WhatsApp</h3><p>Kirim nama, jumlah pasang, hari jemput, alamat + patokan, dan sharelock.</p></article>
-        <article class="step glass tilt reveal"><div class="ico lift" aria-hidden="true">🛵</div><h3>2. Kami jemput</h3><p>Admin konfirmasi jadwal. Gak di rumah? Titip di teras, pos satpam, atau resepsionis kos.</p></article>
-        <article class="step glass tilt reveal"><div class="ico lift" aria-hidden="true">🧽</div><h3>3. Dirawat 2 hari</h3><p>Dicek dulu bahannya, difoto, lalu dicuci dengan metode yang pas.</p></article>
-        <article class="step glass tilt reveal"><div class="ico lift" aria-hidden="true">✨</div><h3>4. Antar &amp; bayar</h3><p>Sepatu diantar balik dalam keadaan kinclong. Bayar COD pas sampai.</p></article>
-      </div>
-      <div class="info-row">
-        <article class="info glass reveal">
-          <h3>Jam aktif admin</h3>
-          <ul><li>Senin–Jumat: 18.00–22.00</li><li>Sabtu–Minggu: 10.00–22.00</li></ul>
-          <p>Di luar jam itu chat tetap masuk, nanti langsung kami balas.</p>
-        </article>
-        <article class="info glass reveal">
-          <h3>Area layanan</h3>
-          <p>Gratis antar-jemput dalam radius 5 km dari Kemayoran, Jakarta Pusat. Di luar radius cukup +Rp15.000 per order, sudah termasuk jemput dan antar balik.</p>
-        </article>
+      <div class="sec-head reveal"><div class="eyebrow">Ketentuan layanan</div><h2>Cara kami bekerja, transparan dari awal.</h2><p>Ringkasan aturan dari SOP operasional SoleVibe yang berlaku untuk setiap order.</p></div>
+      <div class="glass acc reveal">
+        <details open><summary>Penjemputan</summary><div class="ans"><ul>
+          <li>Jadwal jemput dikirim H-1 atau paling lambat 2 jam sebelumnya. Kamu memilih dari slot yang ditawarkan, mengikuti jam kurir SoleVibe.</li>
+          <li>Kurir menghitung jumlah pasang bersamamu, mengecek tidak ada barang tertinggal di dalam sepatu, lalu memotret sepatu saat serah terima.</li>
+          <li>Setiap pasang diberi label ID transaksi dan dimasukkan ke kantong terpisah.</li>
+          <li>Kalau kamu tidak di lokasi lebih dari 15 menit, kurir menghubungi lewat WhatsApp atau telepon. Jemput bisa dijadwalkan ulang, tanpa batas berapa kali.</li>
+          <li>Kuota harian terbatas. Kalau penuh, kami tawarkan jadwal hari berikutnya.</li>
+        </ul></div></details>
+        <details><summary>Pemeriksaan &amp; persetujuan</summary><div class="ans"><ul>
+          <li>Sepatu difoto <em>before</em> minimal dari 6 sudut, plus <em>close-up</em> untuk setiap noda atau kerusakan.</li>
+          <li>Kami cek kondisi berisiko: sol atau lem mulai lepas, midsole retak, kulit kering, warna luntur, jahitan lepas, noda permanen.</li>
+          <li>Kalau ada temuan, admin mengirim fotonya dan risikonya. Sepatu baru dicuci setelah kamu setuju. Kalau batal, sepatu dikembalikan tanpa diproses.</li>
+          <li>Bahan yang kami terima: kanvas, suede, nubuck, mesh/rajut, karet, denim, dan kulit sintetis.</li>
+        </ul></div></details>
+        <details><summary>Pembayaran</summary><div class="ans"><ul>
+          <li>Bayar saat sepatu diantar kembali (COD): tunai, transfer, atau QRIS di depan kurir.</li>
+          <li>Untuk transfer/QRIS, kurir menunggu konfirmasi dana masuk sebelum pamit.</li>
+          <li>Total = biaya cuci + ongkir (bila ada) − potongan poin (bila dipakai). Rinciannya dikirim lewat nota WhatsApp sebelum antar.</li>
+        </ul></div></details>
+        <details><summary>Kirim sendiri lewat ojol atau ekspedisi</summary><div class="ans"><ul>
+          <li>Kamu memesan GoSend/GrabExpress atau ekspedisi ke alamat workshop yang dikirim admin, dan menanggung ongkir pergi dan pulang.</li>
+          <li>Tulis ID transaksi di paket. Paket ekspedisi dibuka dengan video <em>unboxing</em> sebagai bukti kondisi saat tiba.</li>
+          <li>Karena tidak ada kurir yang menagih COD, pembayaran diselesaikan lewat transfer/QRIS sebelum sepatu dikirim balik.</li>
+        </ul></div></details>
+        <details><summary>Komplain &amp; jaminan</summary><div class="ans"><ul>
+          <li>Kurang bersih (noda masih terlihat, masih bau): cuci ulang gratis, jemput-antar ditanggung SoleVibe.</li>
+          <li>Kondisi yang sudah ada sebelumnya: kami jelaskan dengan foto <em>before</em> dan catatan persetujuanmu.</li>
+          <li>Kerusakan akibat proses SoleVibe: kami perbaiki atau pulihkan sepatumu sampai seperti semula.</li>
+          <li>Komplain dibalas paling lambat 15 menit di jam aktif, dan kamu dapat kabar paling lambat 1×24 jam walau keputusan belum final.</li>
+        </ul></div></details>
+        <details><summary>Aturan promo &amp; poin</summary><div class="ans"><ul>
+          <li>Promo 3 pasang Rp100.000 berlaku sekali per customer, tanpa batas waktu. Pasang ke-4 dan seterusnya harga normal.</li>
+          <li>Promo boleh digabung dengan potongan poin. Poin baru dihitung dari biaya cuci yang benar-benar dibayar: promo memakai 5 poin, bayar Rp95.000, dapat 9 poin.</li>
+          <li>Semua poin kembali ke nol setiap 1 Januari. Pengingat dikirim sekali di bulan Desember.</li>
+        </ul></div></details>
       </div>
     </div>
   </section>
 
-  <section data-k="final">
+  <section class="block" id="faq">
+    <div class="wrap">
+      <div class="sec-head reveal"><div class="eyebrow">FAQ</div><h2>Yang sering ditanyain.</h2></div>
+      <div class="glass acc reveal">
+        <details><summary>Berapa lama sepatu saya dicuci?</summary><div class="ans"><p>2 hari sejak sepatu diterima, sudah termasuk diantar balik.</p></div></details>
+        <details><summary>Sepatu saya bahannya apa, bisa dicuci gak?</summary><div class="ans"><p>Kirim foto sepatunya (depan, samping, sol) lewat WhatsApp. Kami layani kanvas, suede, nubuck, mesh/rajut, karet, denim, dan kulit sintetis. Lihat juga bagian <a href="#bahan">Kenali Bahan Sepatumu</a>.</p></div></details>
+        <details><summary>Saya gak di rumah waktu dijemput, gimana?</summary><div class="ans"><p>Titip saja di tempat yang gampang dijangkau kurir, misalnya teras, pos satpam, atau resepsionis kos. Sebelum jemput, admin pasti konfirmasi dulu.</p></div></details>
+        <details><summary>Alamat saya di luar radius 5 km, tetap bisa?</summary><div class="ans"><p>Bisa. Cukup tambah Rp15.000 per order untuk jemput dan antar balik, atau kirim sendiri lewat ojol/ekspedisi.</p></div></details>
+        <details><summary>Bayarnya kapan dan pakai apa?</summary><div class="ans"><p>Saat sepatu diantar kembali (COD): tunai, transfer, atau QRIS.</p></div></details>
+        <details><summary>Kalau hasilnya kurang bersih?</summary><div class="ans"><p>Kabari kami lewat WhatsApp dengan foto bagian yang dikeluhkan. Kalau memang kurang bersih, kami cuci ulang gratis dan jemput-antarnya ditanggung SoleVibe.</p></div></details>
+        <details><summary>Promo 3 pasang bisa dipakai lagi?</summary><div class="ans"><p>Promo hanya berlaku sekali per customer, tapi tidak ada batas waktu. Setelah itu kamu tetap kumpulkan Poin SoleVibe di setiap order.</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
     <div class="wrap">
       <div class="final glass reveal">
         <div class="eyebrow">Siap bikin sepatumu fresh lagi?</div>
         <h2>Chat sekarang, sepatunya kami jemput.</h2>
         <a class="btn btn-wa" href="https://wa.me/message/IOZESRI2RRL3I1" target="_blank" rel="noopener">Order via WhatsApp · 0823-2082-6237</a>
-        <div class="socials">
-          <a class="btn btn-ghost" href="https://www.instagram.com/solevibe_jkt/" target="_blank" rel="noopener">Instagram @solevibe_jkt</a>
-          <a class="btn btn-ghost" href="https://www.tiktok.com/@solevibe.jkt" target="_blank" rel="noopener">TikTok @solevibe.jkt</a>
-        </div>
       </div>
     </div>
   </section>
@@ -348,70 +375,36 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;
 
 <footer>
   <div class="wrap">
-    <span>© 2026 SoleVibe · Cuci sepatu online Jakarta</span>
-    <span>Order hanya lewat WhatsApp. Tidak ada toko offline; semua serah-terima lewat kurir.</span>
-    <span>Model 3D sepatu: <a href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/MaterialsVariantsShoe" target="_blank" rel="noopener">Materials Variants Shoe</a> oleh Shopify, lisensi <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> (dimodifikasi).</span>
+    <span>© 2026 SoleVibe · Cuci sepatu online Jakarta · Restore Your Sole. Refresh Your Vibe.</span>
+    <span>Model 3D sepatu: <a href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/MaterialsVariantsShoe" target="_blank" rel="noopener">Materials Variants Shoe</a> oleh Shopify, lisensi <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> (warna diubah).</span>
   </div>
 </footer>
 
 <script>
-// ----- bahan carousel (CSS 3D ring) -----
 const MATS=[
- ['kanvas','Kanvas','Kain katun ringan dan breathable. Disikat dengan air hangat dan sabun lembut, lalu dikeringkan di tempat teduh supaya warnanya awet.'],
- ['suede','Suede','Bahan lembut berbulu halus yang sensitif air. Dicuci kering dengan sikat khusus suede, noda diangkat pakai teknik serap.'],
- ['nubuck','Nubuck','Lebih tebal dari suede, permukaannya halus seperti beludru. Dirawat dengan sikat lembut dan nubuck cleaner khusus.'],
- ['mesh','Mesh / Rajut','Serat sintetis berpori yang ringan. Dicuci tangan dengan detergen ringan, tidak direndam lama supaya lem sol aman.'],
- ['karet','Karet','Fleksibel dan tahan air. Disikat dengan air mengalir, lalu dikeringkan tuntas supaya tidak lembap dan bau.'],
- ['denim','Denim','Tenunan katun tebal khas denim. Disikat halus, bau dinetralkan dengan baking soda, diangin-anginkan tanpa dijemur.'],
- ['sintetis','Kulit Sintetis','Bahan PU/PVC yang mirip kulit. Dilap kain lembap dan sabun ringan, tanpa alkohol supaya lapisannya tidak retak.']
+ ['kanvas','Kanvas','Kain tenun katun yang ringan dan breathable. Mudah kotor, tapi bisa kembali bersih. Biasa dipakai untuk sneakers kasual dan sepatu sekolah.','Tali dilepas, disikat dengan air hangat dan sabun lembut, dibilas, lalu dikeringkan di tempat teduh.','Dijemur di matahari langsung, karena warnanya bisa pudar.'],
+ ['suede','Suede','Bahan lembut berbulu halus yang sangat sensitif terhadap air dan noda. Biasa dipakai untuk desert boots, chukka, dan sneakers suede.','Dicuci kering tanpa direndam, disikat dengan sikat khusus suede; noda minyak ditaburi maizena ± 1 jam.','Cuci basah, karena bahannya jadi kaku.'],
+ ['nubuck','Nubuck','Lebih tebal dan kuat dari suede, permukaannya halus seperti beludru. Biasa dipakai untuk work boots, sepatu hiking, dan outdoor.','Debu dibersihkan dengan sikat lembut, lalu dirawat dengan nubuck cleaner khusus.','Produk berbasis wax, dan menyamakan caranya dengan suede.'],
+ ['mesh','Mesh / Rajut','Serat sintetis berpori yang sangat ringan dan breathable. Biasa dipakai untuk sepatu lari dan sneakers olahraga.','Dicuci tangan dengan detergen ringan dan sikat lembut, tanpa direndam lama.','Rendam lama (lem sol bisa rusak) dan mesin cuci.'],
+ ['karet','Karet','Bahan fleksibel dan tahan air. Biasa dipakai untuk rain boots, sandal karet, dan outsole sepatu.','Disikat dengan air mengalir, lalu dikeringkan tuntas.','Dibiarkan lembap lama, karena bisa bau.'],
+ ['denim','Denim','Tenunan katun tebal dengan motif denim yang khas. Biasa dipakai untuk sneakers dan slip-on bermotif denim.','Disikat halus dengan detergen dan air hangat, bau dinetralkan dengan baking soda, lalu diangin-anginkan.','Rendam lama dan jemur di matahari.'],
+ ['sintetis','Kulit Sintetis','Bahan buatan (PU/PVC) yang tampilannya menyerupai kulit. Biasa dipakai untuk sneakers harian, sepatu vegan, dan sepatu anak.','Dilap dengan kain lembap dan sabun ringan, lalu dikeringkan dengan kain bersih.','Alkohol atau aseton, karena lapisannya bisa retak dan mengelupas.']
 ];
-const ring=document.getElementById('ring'), dots=document.getElementById('dots');
-const N=MATS.length, step=360/N;
-function radius(){return window.innerWidth<640?330:420}
-MATS.forEach(([f,name,desc],i)=>{
-  const el=document.createElement('article'); el.className='mat glass';
-  el.innerHTML=`<span class="tag">Bahan 0${i+1}</span><img src="assets/sepatu/${f}.webp" alt="Sepatu ${name}" loading="lazy" width="560" height="280"><h3>${name}</h3><p>${desc}</p>`;
-  ring.append(el);
-  const d=document.createElement('button'); d.setAttribute('aria-label','Lihat '+name); d.onclick=()=>go(i); dots.append(d);
+const mg=document.getElementById('matGrid');
+MATS.forEach(([f,name,desc,how,no],i)=>{
+  const a=document.createElement('article'); a.className='card glass mat reveal';
+  a.innerHTML=`<div class="ph"><img src="assets/sepatu/${f}.webp" alt="Sepatu ${name}" loading="lazy" width="560" height="280"></div><div class="body"><div class="eyebrow">Bahan 0${i+1}</div><h3>${name}</h3><p>${desc}</p><dl><dt>Cara kami merawat</dt><dd>${how}</dd><dt>Yang kami hindari</dt><dd>${no}</dd></dl></div>`;
+  mg.append(a);
 });
-let cur=0;
-function layout(){
-  const r=radius();
-  [...ring.children].forEach((el,i)=>{el.style.transform=`rotateY(${i*step}deg) translateZ(${r}px)`});
-  ring.style.transform=`translateZ(${-r}px) rotateY(${-cur*step}deg)`;
-  [...ring.children].forEach((el,i)=>{const d=((i-cur)%N+N)%N; el.style.opacity=(d===0)?1:(d===1||d===N-1)?.55:.18; el.setAttribute('aria-hidden',d!==0)});
-  [...dots.children].forEach((d,i)=>d.setAttribute('aria-current',i===((cur%N)+N)%N));
-  window.svMat=MATS[((cur%N)+N)%N][0];
-}
-function go(i){
-  const target=((i%N)+N)%N, now=((cur%N)+N)%N;
-  let diff=target-now; if(diff>N/2)diff-=N; if(diff<-N/2)diff+=N; cur+=diff; layout();
-}
-document.getElementById('prev').onclick=()=>{cur--;layout()};
-document.getElementById('next').onclick=()=>{cur++;layout()};
-let sx=null; const mats=document.getElementById('materials');
-mats.addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
-mats.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>40){cur+=dx<0?1:-1;layout()}sx=null});
-window.addEventListener('resize',layout); layout();
-let auto=setInterval(()=>{cur++;layout()},4200);
-mats.addEventListener('pointerenter',()=>clearInterval(auto));
+const tip=document.createElement('article'); tip.className='card glass reveal';
+tip.innerHTML='<div class="eyebrow">Versi lengkap</div><h3>Baca artikelnya</h3><p>Panduan visual 10 slide tentang 7 bahan sepatu dan 5 layanan SoleVibe.</p><a class="btn btn-ghost" href="https://www.canva.com/d/ogjd3teBRaCoX-f" target="_blank" rel="noopener">Buka artikel</a>';
+mg.append(tip);
 
-// ----- tilt cards -----
-const fine=matchMedia('(pointer:fine)').matches, reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-if(fine&&!reduce){
-  document.querySelectorAll('.tilt').forEach(c=>{
-    c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`rotateY(${x*14}deg) rotateX(${-y*14}deg)`});
-    c.addEventListener('pointerleave',()=>{c.style.transform=''});
-  });
-}
-
-// ----- reveal + nav -----
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 const nav=document.getElementById('nav');
 addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>40),{passive:true});
 </script>
-
 <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
 <script type="module" src="assets/app3d.js"></script>
 </body>
