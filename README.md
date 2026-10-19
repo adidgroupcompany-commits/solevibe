@@ -7,7 +7,7 @@ Setiap pasang sepatu membawa cerita. SoleVibe hadir untuk menjaganya: dirawat de
 - Harga: Rp50.000 per pasang, sudah termasuk Basic Cleaning, Deep Cleaning, Shoe Care, Special Treatment, dan Whitening
 - Selesai 2 hari, sudah termasuk pengantaran
 - Gratis antar-jemput radius 5 km dari Kemayoran; di luar radius +Rp15.000
-- Promo customer baru: 3 pasang Rp100.000 (1x per customer)
+- Promo 3 pasang Rp100.000: 1x seumur hidup per customer, syarat follow TikTok @solevibe.jkt + Instagram @solevibe_jkt
 - Bayar di tempat (COD)
 - Order hanya via WhatsApp: 0823-2082-6237
 - Instagram: [@solevibe_jkt](https://www.instagram.com/solevibe_jkt/) · TikTok: [@solevibe.jkt](https://www.tiktok.com/@solevibe.jkt)
